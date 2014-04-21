@@ -12,7 +12,6 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
   }
 
   options = options || {};
-  options.objectMode = true;
 
   stream.Duplex.call(this, options);
 
