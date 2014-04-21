@@ -1,6 +1,6 @@
 {
   "name": "duplexer2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Like duplexer (http://npm.im/duplexer) but using streams2",
   "main": "index.js",
   "scripts": {
