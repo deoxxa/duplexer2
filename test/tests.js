@@ -23,7 +23,7 @@ describe("duplexer2", function() {
     var duplex = duplexer2(writable, readable);
 
     writable._write = function _write(input, encoding, _done) {
-      assert.strictEqual(input, "well hello there");
+      assert.strictEqual(input.toString(), "well hello there");
 
       return done();
     };
@@ -35,7 +35,7 @@ describe("duplexer2", function() {
     var duplex = duplexer2(writable, readable);
 
     duplex.on("data", function(e) {
-      assert.strictEqual(e, "well hello there");
+      assert.strictEqual(e.toString(), "well hello there");
 
       return done();
     });
