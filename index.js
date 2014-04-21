@@ -30,9 +30,15 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
     writable.end();
   });
 
-  readable.on("data", function(e) {
-    if (!self.push(e)) {
-      readable.pause();
+  readable.on("readable", function() {
+    var data;
+
+    while (true) {
+      data = readable.read();
+
+      if (data === null || !self.push(data)) {
+        break;
+      }
     }
   });
 
@@ -57,5 +63,9 @@ DuplexWrapper.prototype._write = function _write(input, encoding, done) {
 };
 
 DuplexWrapper.prototype._read = function _read(n) {
-  this._readable.resume();
+  var data = this._readable.read(n);
+
+  if (data !== null) {
+    this.push(data);
+  }
 };
