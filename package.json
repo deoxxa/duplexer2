@@ -3,6 +3,9 @@
   "version": "0.0.2",
   "description": "Like duplexer (http://npm.im/duplexer) but using streams2",
   "main": "index.js",
+  "engines": {
+    "node": "^0.10.1 || ^0.11.1 || ^0.12.1"
+  },
   "scripts": {
     "test": "mocha -R tap"
   },
