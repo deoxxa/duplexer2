@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "chai": "~1.7.2",
-    "mocha": "~1.12.1"
+    "mocha": "^1.18.2"
   },
   "dependencies": {
     "readable-stream": "~1.1.9"
