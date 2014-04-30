@@ -4,7 +4,7 @@ var duplex2 = module.exports = function duplex2(options, writable, readable) {
   return new DuplexWrapper(options, writable, readable);
 };
 
-var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writable, readable) {
+var DuplexWrapper = duplex2.DuplexWrapper = function DuplexWrapper(options, writable, readable) {
   if (typeof readable === "undefined") {
     readable = writable;
     writable = options;
