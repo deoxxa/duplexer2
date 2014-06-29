@@ -16,6 +16,7 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
   stream.Duplex.call(this, options);
 
   this._bubbleErrors = (typeof options.bubbleErrors === "undefined") || !!options.bubbleErrors;
+  this._shouldRead = false;
 
   if (typeof readable.read !== 'function')
     readable = stream.Readable().wrap(readable)
@@ -34,15 +35,7 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
   });
 
   readable.on("readable", function() {
-    var data;
-
-    while (true) {
-      data = readable.read();
-
-      if (data === null || !self.push(data)) {
-        break;
-      }
-    }
+    self._forwardRead();
   });
 
   readable.once("end", function() {
@@ -65,10 +58,19 @@ DuplexWrapper.prototype._write = function _write(input, encoding, done) {
   this._writable.write(input, encoding, done);
 };
 
-DuplexWrapper.prototype._read = function _read(n) {
-  var data = this._readable.read(n);
+DuplexWrapper.prototype._read = function _read() {
+  if (this._shouldRead) return;
+  this._shouldRead = true;
+  this._forwardRead();
+};
 
-  if (data !== null) {
+DuplexWrapper.prototype._forwardRead = function _forwardRead() {
+  if (!this._shouldRead) return;
+  var data;
+  var shouldRead = true;
+  while ((data = this._readable.read()) !== null) {
+    shouldRead = false;
     this.push(data);
   }
+  this._shouldRead = shouldRead;
 };
