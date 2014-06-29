@@ -17,6 +17,9 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
 
   this._bubbleErrors = (typeof options.bubbleErrors === "undefined") || !!options.bubbleErrors;
 
+  if (typeof readable.read !== 'function')
+    readable = stream.Readable().wrap(readable)
+
   this._writable = writable;
   this._readable = readable;
 
