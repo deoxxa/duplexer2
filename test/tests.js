@@ -19,6 +19,10 @@ describe("duplexer2", function() {
     };
   });
 
+  it("should export the DuplexWrapper constructor", function(){
+    assert.isFunction(duplexer2.DuplexWrapper);
+  });
+
   it("should interact with the writable stream properly for writing", function(done) {
     var duplex = duplexer2(writable, readable);
 
