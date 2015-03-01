@@ -1,4 +1,5 @@
 var stream = require("readable-stream");
+var inherits = require("inherits");
 
 module.exports = duplex2;
 module.exports.DuplexWrapper = DuplexWrapper;
@@ -54,7 +55,7 @@ function DuplexWrapper(options, writable, readable) {
   }
 }
 
-DuplexWrapper.prototype = Object.create(stream.Duplex.prototype, {constructor: {value: DuplexWrapper}});
+inherits(DuplexWrapper, stream.Duplex);
 
 DuplexWrapper.prototype._write = function _write(input, encoding, done) {
   this._writable.write(input, encoding, done);
