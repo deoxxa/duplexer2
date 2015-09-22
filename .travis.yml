@@ -6,14 +6,14 @@ node_js:
   - stable
   - '0'
   - '0.10'
-script: >
+script: >-
   if [[ `node --version` == v0.* ]];
   then npm install babel@5 &&
        node node_modules/.bin/babel test.js --out-file test.js &&
-       npm run-script test-legacy;
+       node node_modules/.bin/mocha;
   else npm test;
   fi;
-after_script: >
+after_script: >-
   if [[ `node --version` != v0.* ]];
   then npm install istanbul-coveralls@1 &&
        npm run-script coverage &&

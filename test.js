@@ -1,10 +1,9 @@
-"use strong";
+"use strict";
 
 const assert = require("assert");
 
 const duplexer2 = require("./");
-const Readable = require("readable-stream");
-const Writable = require("readable-stream/writable");
+const {Readable, Writable} = require("readable-stream");
 
 describe("duplexer2", () => {
   let writable;

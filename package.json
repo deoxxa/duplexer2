@@ -6,9 +6,8 @@
     "index.js"
   ],
   "scripts": {
-    "test": "node --strong_mode node_modules/mocha/bin/_mocha test.js",
-    "test-legacy": "_mocha test.js",
-    "coverage": "istanbul cover _mocha test.js"
+    "test": "node --harmony_destructuring --throw-deprecation --trace-sync-io --track-heap-objects node_modules/mocha/bin/_mocha",
+    "coverage": "node --harmony_destructuring node_modules/.bin/istanbul cover _mocha"
   },
   "repository": "deoxxa/duplexer2",
   "keywords": [
