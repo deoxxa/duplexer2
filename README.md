@@ -1,4 +1,4 @@
-duplexer2 [![build status](https://travis-ci.org/deoxxa/duplexer2.png)](https://travis-ci.org/deoxxa/fork)
+duplexer2 [![Build Status](https://travis-ci.org/deoxxa/duplexer2.svg?branch=master)](https://travis-ci.org/deoxxa/duplexer2) [![Coverage Status](https://coveralls.io/repos/deoxxa/duplexer2/badge.svg?branch=master&service=github)](https://coveralls.io/github/deoxxa/duplexer2?branch=master)
 =========
 
 Like duplexer (http://npm.im/duplexer) but using streams2.
