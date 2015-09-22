@@ -6,7 +6,16 @@ node_js:
   - stable
   - '0'
   - '0.10'
-after_script:
-  - npm install istanbul-coveralls@1
-  - npm run-script coverage
-  - node node_modules/.bin/istanbul-coveralls
+script: >
+  if [[ `node --version` == v0.* ]];
+  then npm install babel@5 &&
+       node node_modules/.bin/babel test.js --out-file test.js &&
+       npm run-script test-legacy;
+  else npm test;
+  fi;
+after_script: >
+  if [[ `node --version` != v0.* ]];
+  then npm install istanbul-coveralls@1 &&
+       npm run-script coverage &&
+       node node_modules/.bin/istanbul-coveralls;
+  fi;

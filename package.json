@@ -6,9 +6,9 @@
     "index.js"
   ],
   "scripts": {
-    "test": "mocha",
-    "coverage": "istanbul cover _mocha"
-  },
+    "test": "node --strong_mode node_modules/mocha/bin/_mocha test.js",
+    "test-legacy": "_mocha test.js",
+    "coverage": "istanbul cover _mocha test.js"
   },
   "repository": "deoxxa/duplexer2",
   "keywords": [
@@ -25,7 +25,6 @@
     "readable-stream": "^2.0.2"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
     "istanbul": "^0.3.20",
     "mocha": "^2.2.5"
   }
