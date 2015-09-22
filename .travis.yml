@@ -1,3 +1,8 @@
+sudo: false
+branches:
+  except: /^v\d/
 language: node_js
 node_js:
-  - "0.10"
+  - stable
+  - '0'
+  - '0.10'
