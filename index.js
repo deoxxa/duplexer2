@@ -1,25 +1,41 @@
+"use strict";
+
 var stream = require("readable-stream");
+
+var Duplex = stream.Duplex;
+var Readable = stream.Readable;
 
 var duplex2 = module.exports = function duplex2(options, writable, readable) {
   return new DuplexWrapper(options, writable, readable);
 };
 
 var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writable, readable) {
-  if (typeof readable === "undefined") {
+  if (readable === undefined) {
     readable = writable;
     writable = options;
-    options = null;
+    options = {};
+  } else {
+    options = options || {};
   }
 
-  options = options || {};
+  Duplex.call(this, options);
 
-  stream.Duplex.call(this, options);
-
-  this._bubbleErrors = (typeof options.bubbleErrors === "undefined") || !!options.bubbleErrors;
+  if (options.bubbleErrors === undefined) {
+    this._bubbleErrors = true;
+  } else {
+    if (typeof options.bubbleErrors !== "boolean") {
+      throw new TypeError(
+        String(options.bubbleErrors) +
+        " is not a Boolean value. `bubbleErrors` option of duplexer2 must be Boolean (`true` by default)."
+      );
+    }
+    this._bubbleErrors = options.bubbleErrors;
+  }
   this._shouldRead = false;
 
-  if (typeof readable.read !== 'function')
-    readable = stream.Readable().wrap(readable)
+  if (typeof readable.read !== 'function') {
+    readable = (new Readable()).wrap(readable);
+  }
 
   this._writable = writable;
   this._readable = readable;
@@ -59,18 +75,25 @@ DuplexWrapper.prototype._write = function _write(input, encoding, done) {
 };
 
 DuplexWrapper.prototype._read = function _read() {
-  if (this._shouldRead) return;
+  if (this._shouldRead) {
+    return;
+  }
+
   this._shouldRead = true;
   this._forwardRead();
 };
 
 DuplexWrapper.prototype._forwardRead = function _forwardRead() {
-  if (!this._shouldRead) return;
-  var data;
+  if (!this._shouldRead) {
+    return;
+  }
+
+  var data = this._readable.read();
   var shouldRead = true;
-  while ((data = this._readable.read()) !== null) {
+  while (data !== null) {
     shouldRead = false;
     this.push(data);
+    data = this._readable.read();
   }
   this._shouldRead = shouldRead;
 };
