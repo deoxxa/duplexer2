@@ -1,30 +1,62 @@
-duplexer2 [![Build Status](https://travis-ci.org/deoxxa/duplexer2.svg?branch=master)](https://travis-ci.org/deoxxa/duplexer2) [![Coverage Status](https://coveralls.io/repos/deoxxa/duplexer2/badge.svg?branch=master&service=github)](https://coveralls.io/github/deoxxa/duplexer2?branch=master)
-=========
+# duplexer2 [![Build Status](https://travis-ci.org/deoxxa/duplexer2.svg?branch=master)](https://travis-ci.org/deoxxa/duplexer2) [![Coverage Status](https://coveralls.io/repos/deoxxa/duplexer2/badge.svg?branch=master&service=github)](https://coveralls.io/github/deoxxa/duplexer2?branch=master)
 
-Like duplexer (http://npm.im/duplexer) but using streams2.
+Like [duplexer](https://github.com/Raynos/duplexer) but using Streams3
 
-Overview
---------
+```javascript
+const duplexer2 = require(".");
+const {Readable, Writable} = require("stream");
 
-duplexer2 is a reimplementation of [duplexer](http://npm.im/duplexer) using the
-readable-stream API which is standard in node as of v0.10. Everything largely
+const writable = new Writable({
+  write(data, enc, cb) {
+    if (readable.push(data)) {
+      cb();
+      return;
+    }
+    readable.once("drain", cb);
+  }
+});
+
+const readable = new Readable({read() {/* no-op */}});
+
+// simulate the readable thing closing after a bit
+writable.once("finish", () => setTimeout(() => readable.push(null), 300));
+
+const duplex = duplexer2({}, writable, readable)
+.on("data", data => console.log("got data", data.toString()))
+.on("finish", () => console.log("got finish event"))
+.on("end", () => console.log("got end event"));
+
+duplex.write("oh, hi there", () => console.log("finished writing"));
+duplex.end(() => console.log("finished ending"));
+```
+
+```
+got data "oh, hi there"
+finished writing
+got finish event
+finished ending
+got end event
+```
+
+## Overview
+
+This is a reimplementation of [duplexer](https://www.npmjs.com/package/duplexer) using the
+Streams3 API which is standard in Node as of v4. Everything largely
 works the same.
 
-Installation
-------------
 
-Available via [npm](http://npmjs.org/):
 
-> $ npm install duplexer2
+## Installation
 
-Or via git:
+[Available via `npm`](https://docs.npmjs.com/cli/install):
 
-> $ git clone git://github.com/deoxxa/duplexer2.git node_modules/duplexer2
+```
+$ npm i duplexer2
+```
 
-API
----
+## API
 
-**duplexer2**
+### duplexer2
 
 Creates a new `DuplexWrapper` object, which is the actual class that implements
 most of the fun stuff. All that fun stuff is hidden. DON'T LOOK.
@@ -34,7 +66,7 @@ duplexer2([options], writable, readable)
 ```
 
 ```javascript
-var duplex = duplexer2(new stream.Writable(), new stream.Readable());
+const duplex = duplexer2(new stream.Writable(), new stream.Readable());
 ```
 
 Arguments
@@ -49,80 +81,12 @@ Options
 * __bubbleErrors__ - a boolean value that specifies whether to bubble errors
   from the underlying readable/writable streams. Default is `true`.
 
-Example
--------
 
-Also see [example.js](https://github.com/deoxxa/duplexer2/blob/master/example.js).
+## License
 
-Code:
+3-clause BSD. [A copy](./LICENSE) is included with the source.
 
-```javascript
-var stream = require("stream");
-
-var duplexer2 = require("duplexer2");
-
-var writable = new stream.Writable({objectMode: true}),
-    readable = new stream.Readable({objectMode: true});
-
-writable._write = function _write(input, encoding, done) {
-  if (readable.push(input)) {
-    return done();
-  } else {
-    readable.once("drain", done);
-  }
-};
-
-readable._read = function _read(n) {
-  // no-op
-};
-
-// simulate the readable thing closing after a bit
-writable.once("finish", function() {
-  setTimeout(function() {
-    readable.push(null);
-  }, 500);
-});
-
-var duplex = duplexer2(writable, readable);
-
-duplex.on("data", function(e) {
-  console.log("got data", JSON.stringify(e));
-});
-
-duplex.on("finish", function() {
-  console.log("got finish event");
-});
-
-duplex.on("end", function() {
-  console.log("got end event");
-});
-
-duplex.write("oh, hi there", function() {
-  console.log("finished writing");
-});
-
-duplex.end(function() {
-  console.log("finished ending");
-});
-```
-
-Output:
-
-```
-got data "oh, hi there"
-finished writing
-got finish event
-finished ending
-got end event
-```
-
-License
--------
-
-3-clause BSD. A copy is included with the source.
-
-Contact
--------
+## Contact
 
 * GitHub ([deoxxa](http://github.com/deoxxa))
 * Twitter ([@deoxxa](http://twitter.com/deoxxa))
