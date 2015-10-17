@@ -72,6 +72,7 @@ DuplexWrapper.prototype._write = function _write(input, encoding, done) {
 
 DuplexWrapper.prototype._read = function _read() {
   if (this._shouldRead) {
+    this.push(null);
     return;
   }
 
