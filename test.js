@@ -1,5 +1,7 @@
 "use strong";
 
+Object.assign = require("object-assign");
+
 const duplexer2 = require("./");
 const {Readable, Writable} = require("readable-stream");
 const {test} = require("tape");
