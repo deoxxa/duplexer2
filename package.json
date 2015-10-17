@@ -25,6 +25,8 @@
     "readable-stream": "^2.0.2"
   },
   "devDependencies": {
+    "@shinnn/eslint-config-node-legacy": "^1.0.0",
+    "eslint": "^1.6.0",
     "istanbul": "^0.3.22",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.1"

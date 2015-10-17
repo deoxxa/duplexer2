@@ -4,6 +4,7 @@
 const duplexer2 = require(".");
 const {Readable, Writable} = require("stream");
 
+const readable = new Readable({read() {/* no-op */}});
 const writable = new Writable({
   write(data, enc, cb) {
     if (readable.push(data)) {
@@ -13,8 +14,6 @@ const writable = new Writable({
     readable.once("drain", cb);
   }
 });
-
-const readable = new Readable({read() {/* no-op */}});
 
 // simulate the readable thing closing after a bit
 writable.once("finish", () => setTimeout(() => readable.push(null), 300));
