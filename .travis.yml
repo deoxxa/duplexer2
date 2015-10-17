@@ -6,6 +6,7 @@ node_js:
   - stable
   - '0'
   - '0.10'
+before_install: if [[ `npm --version` != 3* ]]; then npm install -g npm; fi;
 script: >-
   if [[ `node --version` == v0.* ]];
   then npm install babel@5 &&
