@@ -46,8 +46,10 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
     writable.end();
   });
 
-  readable.on("readable", function() {
-    self._forwardRead();
+  readable.on("data", function(e) {
+    if (!self.push(e)) {
+      readable.pause();
+    }
   });
 
   readable.once("end", function() {
@@ -64,6 +66,7 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
     });
   }
 };
+
 DuplexWrapper.prototype = Object.create(stream.Duplex.prototype, {constructor: {value: DuplexWrapper}});
 
 DuplexWrapper.prototype._write = function _write(input, encoding, done) {
@@ -71,29 +74,7 @@ DuplexWrapper.prototype._write = function _write(input, encoding, done) {
 };
 
 DuplexWrapper.prototype._read = function _read() {
-  if (this._shouldRead) {
-    this.push(null);
-    return;
-  }
-
-  this._shouldRead = true;
-  this._forwardRead();
-};
-
-DuplexWrapper.prototype._forwardRead = function _forwardRead() {
-  if (!this._shouldRead) {
-    return;
-  }
-
-  var data;
-  var shouldRead = true;
-
-  while ((data = this._readable.read()) !== null) {
-    shouldRead = false;
-    this.push(data);
-  }
-
-  this._shouldRead = shouldRead;
+  this._readable.resume();
 };
 
 module.exports = function duplex2(options, writable, readable) {
