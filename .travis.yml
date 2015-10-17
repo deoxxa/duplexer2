@@ -10,7 +10,7 @@ script: >-
   if [[ `node --version` == v0.* ]];
   then npm install babel@5 &&
        node node_modules/.bin/babel test.js --out-file test.js &&
-       node node_modules/.bin/mocha;
+       node test.js;
   else npm test;
   fi;
 after_script: >-
