@@ -3,6 +3,7 @@
 Object.assign = require("object-assign");
 
 const duplexer2 = require("./");
+const stream = require("readable-stream");
 const {Readable, Writable} = require("readable-stream");
 const {test} = require("tape");
 const through = require("through");
@@ -135,4 +136,42 @@ test("duplexer2", t => {
     /TypeError.*1 is not a Boolean value\./,
     "should throw a type error when it takes `bubbleError` option but it's not Boolean"
   );
+});
+
+test("do not force flowing-mode", function(t) {
+  t.plan(6);
+
+  const writable = new stream.PassThrough();
+  const readable = new stream.PassThrough();
+
+  t.equal(readable._readableState.flowing, null);
+
+  const duplexStream = duplexer2(writable, readable);
+  duplexStream.end("aaa");
+
+  t.equal(readable._readableState.flowing, null);
+
+  const transformStream = new stream.Transform({
+    transform: function(chunk, encoding, cb) {
+      this.push(String(chunk).toUpperCase());
+      cb();
+    }
+  });
+  writable.pipe(transformStream).pipe(readable);
+
+  t.equal(readable._readableState.flowing, null);
+
+  setTimeout(function() {
+    t.equal(readable._readableState.flowing, null);
+
+    let src = "";
+    duplexStream.on("data", function(buf) {
+      src += String(buf);
+    });
+    duplexStream.on("end", function() {
+      t.equal(src, "AAA");
+    });
+
+    t.equal(readable._readableState.flowing, null);
+  });
 });
