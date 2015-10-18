@@ -50,16 +50,16 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
   });
 
   readable.once("end", function() {
-    return self.push(null);
+    self.push(null);
   });
 
   if (this._bubbleErrors) {
     writable.on("error", function(err) {
-      return self.emit("error", err);
+      self.emit("error", err);
     });
 
     readable.on("error", function(err) {
-      return self.emit("error", err);
+      self.emit("error", err);
     });
   }
 };
