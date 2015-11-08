@@ -6,9 +6,7 @@
     "index.js"
   ],
   "scripts": {
-    "pretest": "eslint --config @shinnn/node-legacy --rule 'quotes: [2, double]' example.js --rule 'no-underscore-dangle: 0' index.js test.js",
-    "test": "node --strong_mode --harmony_destructuring --harmony_rest_parameters --harmony_spreadcalls --throw-deprecation --trace-sync-io --track-heap-objects test.js | tap-spec",
-    "coverage": "node --strong_mode --harmony_destructuring --harmony_rest_parameters --harmony_spreadcalls node_modules/.bin/istanbul cover test.js"
+    "test": "mocha -R tap"
   },
   "repository": "deoxxa/duplexer2",
   "keywords": [
@@ -25,12 +23,6 @@
     "readable-stream": "^2.0.2"
   },
   "devDependencies": {
-    "@shinnn/eslint-config-node-legacy": "^1.0.0",
-    "eslint": "^1.7.1",
-    "istanbul": "^0.3.22",
-    "object-assign": "^4.0.1",
-    "tap-spec": "^4.1.0",
-    "tape": "^4.2.1",
-    "through": "^2.3.8"
+    "mocha": "^2.2.5"
   }
 }
