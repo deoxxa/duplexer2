@@ -26,7 +26,7 @@ class FixtureWritable extends Writable {
 }
 
 test("duplexer2", t => {
-  t.plan(11);
+  t.plan(10);
 
   duplexer2(
     new FixtureWritable({
@@ -129,10 +129,4 @@ test("duplexer2", t => {
   });
 
   stream1.push("well hello there");
-
-  t.throws(
-    () => duplexer2({bubbleErrors: 1}, new Writable(), new Readable()),
-    /TypeError.*1 is not a Boolean value\./,
-    "should throw a type error when it takes `bubbleError` option but it's not Boolean"
-  );
 });

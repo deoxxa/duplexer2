@@ -6,28 +6,13 @@ var Duplex = stream.Duplex;
 var Readable = stream.Readable;
 
 var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writable, readable) {
-  if (readable === undefined) {
+  if (typeof readable === "undefined") {
     readable = writable;
     writable = options;
-    options = {};
-  } else {
-    options = options || {};
+    options = null;
   }
 
   Duplex.call(this, options);
-
-  if (options.bubbleErrors === undefined) {
-    this._bubbleErrors = true;
-  } else {
-    if (typeof options.bubbleErrors !== "boolean") {
-      throw new TypeError(
-        String(options.bubbleErrors) +
-        " is not a Boolean value. `bubbleErrors` option of duplexer2 must be Boolean (`true` by default)."
-      );
-    }
-    this._bubbleErrors = options.bubbleErrors;
-  }
-  this._shouldRead = false;
 
   if (typeof readable.read !== "function") {
     readable = (new Readable()).wrap(readable);
@@ -56,7 +41,7 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
     return self.push(null);
   });
 
-  if (this._bubbleErrors) {
+  if (!options || typeof options.bubbleErrors === "undefined" || options.bubbleErrors) {
     writable.on("error", function(err) {
       return self.emit("error", err);
     });
