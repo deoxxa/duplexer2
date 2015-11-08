@@ -2,9 +2,6 @@
 
 var stream = require("readable-stream");
 
-var Duplex = stream.Duplex;
-var Readable = stream.Readable;
-
 function DuplexWrapper(options, writable, readable) {
   if (typeof readable === "undefined") {
     readable = writable;
@@ -12,12 +9,12 @@ function DuplexWrapper(options, writable, readable) {
     options = null;
   }
 
-  Duplex.call(this, options);
+  stream.Duplex.call(this, options);
 
   this._shouldRead = false;
 
   if (typeof readable.read !== "function") {
-    readable = (new Readable()).wrap(readable);
+    readable = (new stream.Readable()).wrap(readable);
   }
 
   this._writable = writable;
