@@ -12,7 +12,7 @@ function DuplexWrapper(options, writable, readable) {
   stream.Duplex.call(this, options);
 
   if (typeof readable.read !== "function") {
-    readable = (new stream.Readable()).wrap(readable);
+    readable = (new stream.Readable(options)).wrap(readable);
   }
 
   this._writable = writable;
