@@ -5,7 +5,7 @@ var stream = require("readable-stream");
 var Duplex = stream.Duplex;
 var Readable = stream.Readable;
 
-var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writable, readable) {
+function DuplexWrapper(options, writable, readable) {
   if (typeof readable === "undefined") {
     readable = writable;
     writable = options;
@@ -52,7 +52,7 @@ var DuplexWrapper = exports.DuplexWrapper = function DuplexWrapper(options, writ
       return self.emit("error", err);
     });
   }
-};
+}
 
 DuplexWrapper.prototype = Object.create(stream.Duplex.prototype, {constructor: {value: DuplexWrapper}});
 
@@ -67,3 +67,5 @@ DuplexWrapper.prototype._read = function _read() {
 module.exports = function duplex2(options, writable, readable) {
   return new DuplexWrapper(options, writable, readable);
 };
+
+module.exports.DuplexWrapper = DuplexWrapper;

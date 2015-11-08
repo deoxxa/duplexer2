@@ -178,4 +178,8 @@ describe("duplexer2", function() {
 
     readable1.push("well hello there");
   });
+
+  it("should export the DuplexWrapper constructor", function() {
+    assert.equal(typeof duplexer2.DuplexWrapper, "function");
+  });
 });
