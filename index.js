@@ -11,14 +11,13 @@ function DuplexWrapper(options, writable, readable) {
 
   stream.Duplex.call(this, options);
 
-  this._shouldRead = false;
-
   if (typeof readable.read !== "function") {
     readable = (new stream.Readable()).wrap(readable);
   }
 
   this._writable = writable;
   this._readable = readable;
+  this._waiting = false;
 
   var self = this;
 
@@ -30,9 +29,10 @@ function DuplexWrapper(options, writable, readable) {
     writable.end();
   });
 
-  readable.on("data", function(e) {
-    if (!self.push(e)) {
-      readable.pause();
+  readable.on("readable", function() {
+    if (self._waiting) {
+      self._waiting = false;
+      self._read();
     }
   });
 
@@ -58,7 +58,15 @@ DuplexWrapper.prototype._write = function _write(input, encoding, done) {
 };
 
 DuplexWrapper.prototype._read = function _read() {
-  this._readable.resume();
+  var buf;
+  var reads = 0;
+  while ((buf = this._readable.read()) !== null) {
+    this.push(buf);
+    reads++;
+  }
+  if (reads === 0) {
+    this._waiting = true;
+  }
 };
 
 module.exports = function duplex2(options, writable, readable) {

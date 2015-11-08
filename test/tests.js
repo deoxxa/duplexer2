@@ -182,4 +182,42 @@ describe("duplexer2", function() {
   it("should export the DuplexWrapper constructor", function() {
     assert.equal(typeof duplexer2.DuplexWrapper, "function");
   });
+
+  it("should not force flowing-mode", function(done) {
+    var writable = new stream.PassThrough();
+    var readable = new stream.PassThrough();
+
+    assert.equal(readable._readableState.flowing, null);
+
+    var duplexStream = duplexer2(writable, readable);
+    duplexStream.end("aaa");
+
+    assert.equal(readable._readableState.flowing, null);
+
+    var transformStream = new stream.Transform({
+      transform: function(chunk, encoding, cb) {
+        this.push(String(chunk).toUpperCase());
+        cb();
+      }
+    });
+    writable.pipe(transformStream).pipe(readable);
+
+    assert.equal(readable._readableState.flowing, null);
+
+    setTimeout(function() {
+      assert.equal(readable._readableState.flowing, null);
+
+      var src = "";
+      duplexStream.on("data", function(buf) {
+        src += String(buf);
+      });
+      duplexStream.on("end", function() {
+        assert.equal(src, "AAA");
+
+        done();
+      });
+
+      assert.equal(readable._readableState.flowing, null);
+    });
+  });
 });
