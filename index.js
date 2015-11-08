@@ -40,16 +40,16 @@ function DuplexWrapper(options, writable, readable) {
   });
 
   readable.once("end", function() {
-    return self.push(null);
+    self.push(null);
   });
 
   if (!options || typeof options.bubbleErrors === "undefined" || options.bubbleErrors) {
     writable.on("error", function(err) {
-      return self.emit("error", err);
+      self.emit("error", err);
     });
 
     readable.on("error", function(err) {
-      return self.emit("error", err);
+      self.emit("error", err);
     });
   }
 }
