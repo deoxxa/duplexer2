@@ -1,22 +1,7 @@
 sudo: false
-branches:
-  except: /^v\d/
 language: node_js
 node_js:
-  - stable
-  - '0'
-  - '0.10'
-before_install: if [[ `npm --version` != 3* ]]; then npm install -g npm; fi;
-script: >-
-  if [[ `node --version` == v0.* ]];
-  then npm install babel@5 &&
-       node node_modules/.bin/babel test.js --out-file test.js &&
-       node test.js;
-  else npm test;
-  fi;
-after_script: >-
-  if [[ `node --version` != v0.* ]];
-  then npm install istanbul-coveralls@1 &&
-       npm run-script coverage &&
-       node node_modules/.bin/istanbul-coveralls;
-  fi;
+  - "0.10"
+  - "0.12"
+  - "4"
+  - "5"
