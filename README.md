@@ -103,6 +103,17 @@ Options
 * __bubbleErrors__ - a boolean value that specifies whether to bubble errors
   from the underlying readable/writable streams. Default is `true`.
 
+### duplexer2.obj
+
+Creates a new `DuplexWrapper` object in the object mode. The arguments and options are the same as the above.
+
+```javascript
+duplexer2.obj([options], writable, readable)
+```
+
+```javascript
+const duplex = duplexer2.obj(new stream.Writable({objectMode: true}), new stream.Readable({objectMode: true}));
+```
 
 ## License
 

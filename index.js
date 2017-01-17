@@ -73,4 +73,21 @@ module.exports = function duplex2(options, writable, readable) {
   return new DuplexWrapper(options, writable, readable);
 };
 
+module.exports.obj = function (options, writable, readable) {
+  if (typeof readable === "undefined") {
+    readable = writable;
+    writable = options;
+    options = {};
+  }
+
+  if (!options) {
+    options = {}
+  }
+
+  options.objectMode = true
+  options.highWaterMark = options.highWaterMark || 16
+
+  return module.exports(options, writable, readable)
+};
+
 module.exports.DuplexWrapper = DuplexWrapper;

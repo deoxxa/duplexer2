@@ -220,4 +220,42 @@ describe("duplexer2", function() {
       assert.equal(readable._readableState.flowing, null);
     });
   });
+
+  describe('.obj', function() {
+    it('should create duplex of object mode', function(done) {
+      var duplex = duplexer2.obj(null, writable, readable);
+
+      duplex.on('data', function(data) {
+        assert.deepEqual(data, {message: "hello"});
+
+        done()
+      });
+
+      writable._write = function _write(input, encoding, _done) {
+        assert.deepEqual(input, {message: "hello"});
+
+        readable.push(input);
+      };
+
+      duplex.write({message: "hello"});
+    });
+
+    it('should work with the default options when the first param is omitted', function(done) {
+      var duplex = duplexer2.obj(writable, readable);
+
+      duplex.on('data', function(data) {
+        assert.deepEqual(data, {message: "hello"});
+
+        done()
+      });
+
+      writable._write = function _write(input, encoding, _done) {
+        assert.deepEqual(input, {message: "hello"});
+
+        readable.push(input);
+      };
+
+      duplex.write({message: "hello"});
+    });
+  });
 });
