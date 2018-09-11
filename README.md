@@ -29,7 +29,8 @@ writable.once("finish", function() {
   }, 500);
 });
 
-var duplex = duplexer2(writable, readable);
+// set objectMode to match the writable and readable streams
+var duplex = duplexer2({objectMode: true}, writable, readable);
 
 duplex.on("data", function(e) {
   console.log("got data", JSON.stringify(e));
