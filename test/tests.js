@@ -192,7 +192,7 @@ describe("duplexer2", function() {
     var duplexStream = duplexer2(writable, readable);
     duplexStream.end("aaa");
 
-    assert.equal(readable._readableState.flowing, null);
+    assert.equal(readable._readableState.flowing, false);
 
     var transformStream = new stream.Transform({
       transform: function(chunk, encoding, cb) {
@@ -202,10 +202,10 @@ describe("duplexer2", function() {
     });
     writable.pipe(transformStream).pipe(readable);
 
-    assert.equal(readable._readableState.flowing, null);
+    assert.equal(readable._readableState.flowing, false);
 
     setTimeout(function() {
-      assert.equal(readable._readableState.flowing, null);
+      assert.equal(readable._readableState.flowing, false);
 
       var src = "";
       duplexStream.on("data", function(buf) {
@@ -217,7 +217,7 @@ describe("duplexer2", function() {
         done();
       });
 
-      assert.equal(readable._readableState.flowing, null);
+      assert.equal(readable._readableState.flowing, false);
     });
   });
 });

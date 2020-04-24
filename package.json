@@ -1,6 +1,6 @@
 {
   "name": "duplexer2",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Like duplexer but using streams3",
   "files": [
     "index.js"
@@ -20,9 +20,9 @@
   "author": "Conrad Pankoff <deoxxa@fknsrs.biz> (http://www.fknsrs.biz/)",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "readable-stream": "^2.0.2"
+    "readable-stream": "^3.6.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.5"
+    "mocha": "^7.1.1"
   }
 }
